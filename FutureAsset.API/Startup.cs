@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using FutureAsset.API.Infrastructure;
+using FutureAsset.Service.Customer;
+using FutureAsset.Service.Document;
+using FutureAsset.Service.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,7 +28,15 @@ namespace FutureAsset.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            var _mappingProfile = new MapperConfiguration(mp => { mp.AddProfile(new MappingProfile()); });
+            IMapper mapper = _mappingProfile.CreateMapper();//creating mapper.
+            _ = services.AddSingleton(mapper);
+            //services.AddControllersWithViews();
+            services.AddControllers();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

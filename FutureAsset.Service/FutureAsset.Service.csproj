@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FutureAsset.DB\FutureAsset.DB.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="User\" />
+    <None Remove="Customer\" />
+    <None Remove="Document\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="User\" />
+    <Folder Include="Customer\" />
+    <Folder Include="Document\" />
+  </ItemGroup>
+</Project>

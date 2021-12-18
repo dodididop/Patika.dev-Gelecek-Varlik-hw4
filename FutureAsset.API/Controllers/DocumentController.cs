@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using FutureAsset.Model;
 using FutureAsset.Service.Document;
@@ -19,12 +20,37 @@ namespace FutureAsset.API.Controllers
             _mapper = mapper;
         }
 
-        
-
         [HttpPost]
         public Response<bool> Create([FromBody] DocumentViewModel request)
         {
             return _documentService.Create(request);
+        }
+
+        [HttpGet("GetAll")]
+        public Response<List<DocumentViewModel>> GetDocuments()
+        {
+            return _documentService.GetDocuments();
+        }
+
+        [HttpGet("GetById/{id}")]
+
+        public Response<DocumentViewModel> GetDocumentById(int id)
+        {
+            return _documentService.GetDocumentById(id);
+        }
+
+        [HttpGet("GetByType/{type}")]
+
+        public Response<List<DocumentViewModel>> GetDocumentByType(string type)
+        {
+            return _documentService.GetDocumentByType(type);
+        }
+
+        [HttpPut]
+
+        public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel request)
+        {
+            return _documentService.Update(id, request);
         }
     }
 }

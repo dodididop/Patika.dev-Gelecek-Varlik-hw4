@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using FutureAsset.DB.Entities.DatabaseContext;
 using FutureAsset.Model;
@@ -37,5 +39,95 @@ namespace FutureAsset.Service.Document
                 return new Response<bool>(false);
             }
         }
+
+        public Response<List<DocumentViewModel>> GetDocuments()
+        {
+            var response = new Response<List<DocumentViewModel>>();
+            using (var srv = new FutureAssetDBContext())
+            {
+                var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted).OrderBy(a => a.Id);
+
+                if (data.Any())
+                {
+                    response.IsSuccess = true;
+                    response.Data = _mapper.Map<List<DocumentViewModel>>(data);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                }
+            }
+            return response;
+        }
+
+        public Response<DocumentViewModel> GetDocumentById(int id)
+        {
+            var response = new Response<DocumentViewModel>();
+            using (var srv = new FutureAssetDBContext())
+            {
+                var data = srv.Document.Where(a => a.Id == id).FirstOrDefault();
+
+                if (data is not null)
+                {
+                    response.IsSuccess = true;
+                    response.Data =_mapper.Map<DocumentViewModel>(data);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                }
+            }
+            return response;
+        }
+
+        public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel updatedDocument)
+        {
+            var response = new Response<DetailedDocumentModel>();
+            using (var srv = new FutureAssetDBContext())
+            {
+                bool isAuthenticated = srv.Document.Any(a => a.IsActive && !a.IsDeleted && a.Type == updatedDocument.Type && a.Id == updatedDocument.Id);
+                var document = srv.Document.SingleOrDefault(a => a.Id == id);
+
+                if (isAuthenticated && document is not null)
+                {
+                    document.CreateDate = updatedDocument.CreateDate;
+                    document.DocDate = updatedDocument.DocDate;
+                    document.ModificationDate = DateTime.Now;
+                    document.DocNumber = updatedDocument.DocNumber;
+                    
+                    srv.SaveChanges();
+                    response.Data = _mapper.Map<DetailedDocumentModel>(document);
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                  
+                    response.IsSuccess = false;
+                }
+
+                return response;
+            }
+        }
+
+        public Response<List<DocumentViewModel>> GetDocumentByType(string type)
+        {
+            var response = new Response<List<DocumentViewModel>>();
+            using (var srv = new FutureAssetDBContext())
+            {
+                var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted && a.Type == type).OrderBy(a => a.Id);
+
+                if (data.Any())
+                {
+                    response.IsSuccess = true;
+                    response.Data = _mapper.Map<List<DocumentViewModel>>(data);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                }
+            }
+            return response;
+        }
+
     }
 }

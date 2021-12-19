@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using FutureAsset.DB.Entities.DatabaseContext;
 using FutureAsset.Model;
@@ -39,6 +40,30 @@ namespace FutureAsset.Service.User
             {
                 return new Response<bool>(false);
             }
+        }
+
+        public Response<UserViewModel> Login(UserViewModel loginUser)
+        {
+            Response<UserViewModel> result = new();
+            try
+            {
+                using (var srv = new FutureAssetDBContext())
+                {
+                    var _data = srv.User.FirstOrDefault(a => a.UserName == loginUser.UserName &&
+                    a.Password == loginUser.Password);
+                    if (_data is not null)
+                    {
+                        result.IsSuccess = true;
+                        result.Data = _mapper.Map<UserViewModel>(_data);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+            }
+
+            return result;
         }
     }
 }

@@ -7,7 +7,7 @@ using FutureAsset.Model;
 using FutureAsset.Service.Customer;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace FutureAsset.API.Controllers
 {

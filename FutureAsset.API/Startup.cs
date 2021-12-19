@@ -36,6 +36,8 @@ namespace FutureAsset.API
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddMemoryCache();
+            services.AddScoped<LoginFilter>();
 
         }
 

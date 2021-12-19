@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AutoMapper;
+using FutureAsset.API.Infrastructure;
 using FutureAsset.Model;
 using FutureAsset.Service.Document;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,13 @@ namespace FutureAsset.API.Controllers
         public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel request)
         {
             return _documentService.Update(id, request);
+        }
+
+        [HttpGet("GetDocumentsWithPage")]//Pagination
+
+        public Response<List<DocumentViewModel>> GetDocuments([FromQuery]PaginationParameters parameters)
+        {
+            return _documentService.GetDocumentsPagination(parameters);
         }
     }
 }

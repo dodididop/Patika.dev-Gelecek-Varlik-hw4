@@ -11,5 +11,6 @@ namespace FutureAsset.Service.Document
         public Response<DocumentViewModel> GetDocumentById(int id);
         public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel updatedDocument);
         public Response<List<DocumentViewModel>> GetDocumentByType(string type);
+        public Response<List<DocumentViewModel>> GetDocumentsPagination(PaginationParameters parameters);
     }
 }

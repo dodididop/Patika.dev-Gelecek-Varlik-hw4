@@ -129,5 +129,27 @@ namespace FutureAsset.Service.Document
             return response;
         }
 
+        //Pagination Service
+        public Response<List<DocumentViewModel>> GetDocumentsPagination(PaginationParameters parameters)
+        {
+            var response = new Response<List<DocumentViewModel>>();
+            using (var srv = new FutureAssetDBContext())
+            {
+                var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted).OrderBy(a => a.Id)
+                    .Skip((parameters.PageNumber -1 )*parameters.PageSize).Take(parameters.PageSize);
+
+                if (data.Any())
+                {
+                    response.IsSuccess = true;
+                    response.Data = _mapper.Map<List<DocumentViewModel>>(data);
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                }
+            }
+            return response;
+        }
+
     }
 }

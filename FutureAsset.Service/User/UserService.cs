@@ -21,14 +21,9 @@ namespace FutureAsset.Service.User
             try
             {
                 var user = _mapper.Map<FutureAsset.DB.Entities.User>(newUser);
-
-                user.CreateDate = DateTime.Now.Date;
-                user.PhoneNumber = "2122342893";
-                user.Email = "dido@gmail.com";
                 user.IsActive = true;
                 user.IsDeleted = false;
-                user.Surname ="Cokyasa";
-                user.Name = "Didem";
+
                 using (var srv = new FutureAssetDBContext())
                 {
                     srv.User.Add(user);

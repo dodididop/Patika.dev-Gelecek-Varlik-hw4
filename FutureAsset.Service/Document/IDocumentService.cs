@@ -6,10 +6,10 @@ namespace FutureAsset.Service.Document
 {
     public interface IDocumentService
     {
-        public Response<bool> Create(DocumentViewModel newDocument);
+        public Response<bool> Create(DocumentCreationModel newDocument);
         public Response<List<DocumentViewModel>> GetDocuments();
         public Response<DocumentViewModel> GetDocumentById(int id);
-        public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel updatedDocument);
+        public Response<DetailedDocumentModel> Update(DetailedDocumentModel updatedDocument);
         public Response<List<DocumentViewModel>> GetDocumentByType(string type);
         public Response<List<DocumentViewModel>> GetDocumentsPagination(PaginationParameters parameters);
     }

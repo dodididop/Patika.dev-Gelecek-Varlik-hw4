@@ -7,7 +7,7 @@ using FutureAsset.Model;
 
 namespace FutureAsset.Service.Document
 {
-    public class DocumentService:IDocumentService
+    public class DocumentService : IDocumentService
     {
         private readonly IMapper _mapper;
 
@@ -16,14 +16,13 @@ namespace FutureAsset.Service.Document
             _mapper = mapper;
         }
 
-        public Response<bool> Create(DocumentViewModel newDocument)
+        public Response<bool> Create(DocumentCreationModel newDocument)
         {
             try
             {
                 var document = _mapper.Map<FutureAsset.DB.Entities.Document>(newDocument);
 
                 document.CreateDate = DateTime.Now.Date;
-                document.DocDate = DateTime.Now.Date.AddMonths(-1);
                 document.IsActive = true;
                 document.IsDeleted = false;
 
@@ -70,7 +69,7 @@ namespace FutureAsset.Service.Document
                 if (data is not null)
                 {
                     response.IsSuccess = true;
-                    response.Data =_mapper.Map<DocumentViewModel>(data);
+                    response.Data = _mapper.Map<DocumentViewModel>(data);
                 }
                 else
                 {
@@ -80,28 +79,23 @@ namespace FutureAsset.Service.Document
             return response;
         }
 
-        public Response<DetailedDocumentModel> Update(int id, DetailedDocumentModel updatedDocument)
+        public Response<DetailedDocumentModel> Update(DetailedDocumentModel updatedDocument)
         {
             var response = new Response<DetailedDocumentModel>();
             using (var srv = new FutureAssetDBContext())
             {
-                bool isAuthenticated = srv.Document.Any(a => a.IsActive && !a.IsDeleted && a.Type == updatedDocument.Type && a.Id == updatedDocument.Id);
-                var document = srv.Document.SingleOrDefault(a => a.Id == id);
+                //bool isAuthenticated = srv.Document.Any(a => a.IsActive && !a.IsDeleted && a.Type == updatedDocument.Type && a.Id == updatedDocument.Id);
+                var document = srv.Document.Find(updatedDocument.Id);
 
-                if (isAuthenticated && document is not null)
+                if (document is not null)
                 {
-                    document.CreateDate = updatedDocument.CreateDate;
-                    document.DocDate = updatedDocument.DocDate;
                     document.ModificationDate = DateTime.Now;
-                    document.DocNumber = updatedDocument.DocNumber;
-                    
                     srv.SaveChanges();
                     response.Data = _mapper.Map<DetailedDocumentModel>(document);
                     response.IsSuccess = true;
                 }
                 else
                 {
-                  
                     response.IsSuccess = false;
                 }
 
@@ -136,7 +130,7 @@ namespace FutureAsset.Service.Document
             using (var srv = new FutureAssetDBContext())
             {
                 var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted).OrderBy(a => a.Id)
-                    .Skip((parameters.PageNumber -1 )*parameters.PageSize).Take(parameters.PageSize);
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize).Take(parameters.PageSize);
 
                 if (data.Any())
                 {

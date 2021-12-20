@@ -9,17 +9,21 @@ namespace FutureAsset.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class UserController : BaseController
     {
-        private static readonly IMemoryCache memoryCache;
+        private readonly IMemoryCache _memoryCache;//private static readonly IMemoryCache memoryCache;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         
 
-        public UserController(IMapper mapper, IUserService userService) : base(memoryCache)
+
+        public UserController(IMapper mapper, IUserService userService, IMemoryCache memoryCache) : base(memoryCache)
         {
             _mapper = mapper;
             _userService = userService;
+           
+
         }
 
         [HttpPost]

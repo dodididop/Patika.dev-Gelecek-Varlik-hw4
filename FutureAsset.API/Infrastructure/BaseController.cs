@@ -7,6 +7,7 @@ namespace FutureAsset.API.Infrastructure
     public class BaseController : ControllerBase
     {
         private readonly IMemoryCache _memoryCache;
+        
 
         public BaseController(IMemoryCache memoryCache)
         {
@@ -24,11 +25,12 @@ namespace FutureAsset.API.Infrastructure
         private UserViewModel GetCurrentUser()
         {
             var response = new UserViewModel();
-            if (_memoryCache.TryGetValue(CacheKeys.Login, out UserViewModel loginUser))
-            {
-                response = loginUser;
-            }
-            return loginUser;
+            _memoryCache.TryGetValue(CacheKeys.Login, out UserViewModel loginUser);
+            //if (_memoryCache.TryGetValue(CacheKeys.Login, out UserViewModel loginUser))
+            //{
+            //    response = loginUser;
+            //}
+            return response;
         }
     }
 }

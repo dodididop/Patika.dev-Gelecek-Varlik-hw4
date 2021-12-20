@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FutureAsset.API.Infrastructure;
 using FutureAsset.Model;
 using FutureAsset.Service.User;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -39,9 +35,10 @@ namespace FutureAsset.API.Controllers
                         AbsoluteExpiration = DateTime.Now.AddHours(1),// after one hour, erased from cache. 
                         Priority = CacheItemPriority.Normal
                     };
-                    _memoryCache.Set(CacheKeys.Login, response.Data, cacheOptions);
+                    _memoryCache.Set(CacheKeys.Login, _response.Data, cacheOptions);
                 }
                 response.Data = true;
+                response.IsSuccess = true;
             }
 
             return response;

@@ -15,6 +15,7 @@ namespace FutureAsset.API.Infrastructure
             CreateMap<FutureAsset.DB.Entities.Document, FutureAsset.Model.DocumentViewModel>();
             CreateMap<FutureAsset.DB.Entities.Document, FutureAsset.Model.DetailedDocumentModel>();
             CreateMap<FutureAsset.Model.DetailedDocumentModel, FutureAsset.DB.Entities.Document>();
+            CreateMap<FutureAsset.Model.DocumentCreationModel, FutureAsset.DB.Entities.Document>();
         }
     }
 }

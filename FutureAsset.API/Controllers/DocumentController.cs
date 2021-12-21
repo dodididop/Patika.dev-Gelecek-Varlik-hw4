@@ -45,5 +45,12 @@ namespace FutureAsset.API.Controllers
         {
             return _documentService.Update(request);
         }
+
+        [HttpDelete("{id}")]
+
+        public Response<bool> Delete(int id)
+        {
+            return _documentService.Delete(id);
+        }
     }
 }

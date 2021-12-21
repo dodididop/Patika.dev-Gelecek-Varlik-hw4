@@ -16,14 +16,11 @@ namespace FutureAsset.API.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         
-
-
         public UserController(IMapper mapper, IUserService userService, IMemoryCache memoryCache) : base(memoryCache)
         {
             _mapper = mapper;
             _userService = userService;
-           
-
+            _memoryCache = memoryCache;
         }
 
         [HttpPost]

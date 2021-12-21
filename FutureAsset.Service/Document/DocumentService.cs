@@ -78,7 +78,7 @@ namespace FutureAsset.Service.Document
             }
         }
 
-        //update document.
+        //Update document.
         public Response<DetailedDocumentModel> Update(DetailedDocumentModel updatedDocument)
         {
             var response = new Response<DetailedDocumentModel>();
@@ -101,5 +101,19 @@ namespace FutureAsset.Service.Document
                 return response;
             }
         }
+
+        //Delete document.
+        public Response<bool> Delete(int id)
+        {
+            var response = new Response<DetailedDocumentModel>() { IsSuccess = false };
+
+            using (var srv = new FutureAssetDBContext())
+            {
+                var document = srv.Document.Where(x => x.Id == id).SingleOrDefault();
+                srv.Document.Remove(document);
+                srv.SaveChanges();
+                return new Response<bool>(true);
+            }
+        }   
     }
 }

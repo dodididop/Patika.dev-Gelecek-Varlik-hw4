@@ -30,7 +30,7 @@ namespace FutureAsset.Service.Customer
                     return new Response<bool>(true);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Response<bool>(false);
             }

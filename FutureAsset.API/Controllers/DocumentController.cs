@@ -32,18 +32,11 @@ namespace FutureAsset.API.Controllers
             return _documentService.GetDocuments();
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet]
 
-        public Response<DocumentViewModel> GetDocumentById(int id)
+        public Response<List<DetailedDocumentModel>> List([FromQuery] int pageSize, int currentPage, string nameStartsWith = "")
         {
-            return _documentService.GetDocumentById(id);
-        }
-
-        [HttpGet("GetByType/{type}")]
-
-        public Response<List<DocumentViewModel>> GetDocumentByType(string type)
-        {
-            return _documentService.GetDocumentByType(type);
+            return _documentService.List(pageSize, currentPage, nameStartsWith);
         }
 
         [HttpPut]
@@ -51,13 +44,6 @@ namespace FutureAsset.API.Controllers
         public Response<DetailedDocumentModel> Update(DetailedDocumentModel request)
         {
             return _documentService.Update(request);
-        }
-
-        [HttpGet("GetDocumentsWithPage")]//Pagination
-
-        public Response<List<DocumentViewModel>> GetDocuments([FromQuery]PaginationParameters parameters)
-        {
-            return _documentService.GetDocumentsPagination(parameters);
         }
     }
 }

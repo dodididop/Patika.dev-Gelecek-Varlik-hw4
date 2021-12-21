@@ -16,6 +16,7 @@ namespace FutureAsset.Service.User
             _mapper = mapper;
         }
 
+        //Create new user.
         public Response<bool> Create(UserViewModel newUser)
         {
             try
@@ -31,12 +32,13 @@ namespace FutureAsset.Service.User
                     return new Response<bool>(true);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Response<bool>(false);
             }
         }
 
+        //Login user
         public Response<UserViewModel> Login(UserViewModel loginUser)
         {
             Response<UserViewModel> result = new();
@@ -53,8 +55,9 @@ namespace FutureAsset.Service.User
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                result.Message ="Something went wrong when you try to login.";
                 result.IsSuccess = false;
             }
 

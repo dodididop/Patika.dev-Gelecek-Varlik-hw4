@@ -16,6 +16,7 @@ namespace FutureAsset.Service.Document
             _mapper = mapper;
         }
 
+        //Create new document
         public Response<bool> Create(DocumentCreationModel newDocument)
         {
             try
@@ -33,12 +34,13 @@ namespace FutureAsset.Service.Document
                     return new Response<bool>(true);
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception)
+            { 
                 return new Response<bool>(false);
             }
         }
 
+        //Get all the documents.
         public Response<List<DocumentViewModel>> GetDocuments()
         {
             var response = new Response<List<DocumentViewModel>>();
@@ -59,32 +61,29 @@ namespace FutureAsset.Service.Document
             return response;
         }
 
-        public Response<DocumentViewModel> GetDocumentById(int id)
+        //Pagination, filtering, sorting.
+        public Response<List<DetailedDocumentModel>> List( int pageSize, int currentPage, string nameStartsWith="")
         {
-            var response = new Response<DocumentViewModel>();
+            var result = new Response<List<DetailedDocumentModel>>() { IsSuccess = false };
+
             using (var srv = new FutureAssetDBContext())
             {
-                var data = srv.Document.Where(a => a.Id == id).FirstOrDefault();
-
-                if (data is not null)
-                {
-                    response.IsSuccess = true;
-                    response.Data = _mapper.Map<DocumentViewModel>(data);
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                }
+                var _result =srv.Document.Where(x=>x.IsActive && !x.IsDeleted);
+                _result = String.IsNullOrEmpty(nameStartsWith) ? _result : _result.Where(x=> x.Type.StartsWith(nameStartsWith));//Filter
+                _result = _result.OrderBy(x => x.DocDate);//ascending order by document date.
+                _result = _result.Skip((currentPage - 1) * pageSize).Take(pageSize);//Pagination
+                result.Data = _mapper.Map<List<DetailedDocumentModel>>(_result);
+                result.IsSuccess = true;
+                return result;
             }
-            return response;
         }
 
+        //update document.
         public Response<DetailedDocumentModel> Update(DetailedDocumentModel updatedDocument)
         {
             var response = new Response<DetailedDocumentModel>();
             using (var srv = new FutureAssetDBContext())
             {
-                //bool isAuthenticated = srv.Document.Any(a => a.IsActive && !a.IsDeleted && a.Type == updatedDocument.Type && a.Id == updatedDocument.Id);
                 var document = srv.Document.Find(updatedDocument.Id);
 
                 if (document is not null)
@@ -96,54 +95,11 @@ namespace FutureAsset.Service.Document
                 }
                 else
                 {
+                    response.Message = "Something went wrong.";
                     response.IsSuccess = false;
                 }
-
                 return response;
             }
         }
-
-        public Response<List<DocumentViewModel>> GetDocumentByType(string type)
-        {
-            var response = new Response<List<DocumentViewModel>>();
-            using (var srv = new FutureAssetDBContext())
-            {
-                var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted && a.Type == type).OrderBy(a => a.Id);
-
-                if (data.Any())
-                {
-                    response.IsSuccess = true;
-                    response.Data = _mapper.Map<List<DocumentViewModel>>(data);
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                }
-            }
-            return response;
-        }
-
-        //Pagination Service
-        public Response<List<DocumentViewModel>> GetDocumentsPagination(PaginationParameters parameters)
-        {
-            var response = new Response<List<DocumentViewModel>>();
-            using (var srv = new FutureAssetDBContext())
-            {
-                var data = srv.Document.Where(a => a.IsActive && !a.IsDeleted).OrderBy(a => a.Id)
-                    .Skip((parameters.PageNumber - 1) * parameters.PageSize).Take(parameters.PageSize);
-
-                if (data.Any())
-                {
-                    response.IsSuccess = true;
-                    response.Data = _mapper.Map<List<DocumentViewModel>>(data);
-                }
-                else
-                {
-                    response.IsSuccess = false;
-                }
-            }
-            return response;
-        }
-
     }
 }
